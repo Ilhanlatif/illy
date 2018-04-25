@@ -7,7 +7,7 @@
 ;; The first version of MUD game
 
 ( define objects '((1 "a silver dagger " )
-                  (1 "a gold coin " )))
+                   (1 "a gold coin " )))
 
 
 (define descriptions '( (1 "You are in the lobby you can see an exit to the North and east.")
@@ -65,7 +65,7 @@
 
 (define (add-object db id object )
 (if (hash-has-key? db id )
-(let ((record ( hash-ref db id )))
+(let ((record (hash-ref db id )))
 (hash-set! db id (cons object record )))
 (hash-set! db id (cons object empty ))))
 
