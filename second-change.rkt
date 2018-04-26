@@ -18,16 +18,16 @@
                    
 
 
-(define descriptions '( (1 "You are in the lobby you can see an exit to the North and East.
+(define descriptions '( (1 "You are in the Entrance you can see an exit to the North and East.
 You can see a silver dagger and a gold coin")
                         (2 "You are in the hallway there is an exit to the South and East.
 You can see a Torch and Sparrow") 
-                        (3 "You are in the kitchen there is an exit to the East and West.
+                        (3 "You are in the garden there is an exit to the East and West.
 You can see a gun a gold coin")
-                        (4 "You are in the living room there is exit to the West and South.
+                        (4 "You are in the Corridor there is exit to the West and South.
 You can see a health booster and a daggger")                   
                         (5 "You are in the bedroom there is exit to the West and North")
-                        (6 "You are in the toilet room there is exit to the West.
+                        (6 "You are in the bathroom there is exit to the West.
 You can see a sliver coin and gun")))
 ;(define directions '( (1 (north 2) (south 0) (east 0) (west 0))
 ;                      (2 (north 0) (south 1) (east 3) (west 0))
@@ -110,14 +110,14 @@ You can see a sliver coin and gun")))
 
 
 
-( define room-type '( (0 " Entrance ")
-                      (1 "hall ")
-                      (2 "hallway ")
-                      (3 " corridor ")
-                      (4 " lobby " )
-                      (5 " hallway ")
-                      (6 " court " )
-                      (7 " pass " )))
+( define room-type '( ( 0 "entrance ")
+                      (1 "hallway ")
+                      (2 "garden ")
+                      (3 "corridor " )
+                      (4 "bedroom") 
+                      (5 "bathroom" )
+                      ))
+                   
 ( define ( assq-ref assqlist id )
    ( cadr ( assq id assqlist )))
 ( define rooms ( make-hash ))
@@ -193,29 +193,29 @@ You can see a sliver coin and gun")))
    keylist))
 ;stop repetition 
 (define (evaluate a b id)
-      (cond  ((eq? a b )
-         'bag)
-  (else
-   id)))
-
-(define ( remove-object db id from input)
-  (let* ((str (string-join (cdr (string-split input))));; remove car (pick)
-         (newid (evaluate from 'bag id)))
-  (when  (hash-has-key? db newid )    (let* (( record ( hash-ref db newid ))
-           (result (remove (lambda (x) (string-suffix-ci? str x)) record))
-           (item ( lset-difference equal? record result )))
-      (cond (( null? item )
-             (printf "I don ’t see that item in the room !\n"))
-            ( else
-              (cond ((eq? from 'room)
-              ( printf " Added ~a to your bag .\n" ( first item ))
+  (cond  ((eq? a b )
+          'bag)
+         (else
+          id)))
+( define ( remove-object-from-room db id str )
+   ;(define ( remove-object db id from input)
+   ;(let* ((str (string-join (cdr (string-split input))));; remove car (pick)
+   ;(newid (evaluate from 'bag id)))
+   (when  (hash-has-key? db  )    (let* (( record ( hash-ref db  ))
+                                         (result (remove (lambda (x) (string-suffix-ci? str x)) record))
+                                         (item ( lset-difference equal? record result )))
+                                    (cond (( null? item )
+                                           (printf "I don ’t see that item in the room !\n"))
+                                          ;            ( else
+                                          ;              (cond ((eq? from 'room)
+                                          ;              ( printf " Added ~a to your bag .\n" ( first item ))
               
-              ( add-object inventorydb  'bag ( first item ))
-              ( hash-set! db id result ))
-            (else
-             (printf  "removed -a from your bag.\n" (first item))
-                      (add-object objectdb id (first item ))
-                                  (hash-set! db 'bag result)))))))))
+                                          ( add-object inventorydb  'bag ( first item ))
+                                          ( hash-set! db id result )))))
+;            (else
+;             (printf  "removed -a from your bag.\n" (first item))
+;                      (add-object objectdb id (first item ))
+;                                  (hash-set! db 'bag result)))))
 
 
 
@@ -234,9 +234,9 @@ You can see a sliver coin and gun")))
 
 
 (define (pick-item  from id input)
-  (if eq? from 'bag )
-  (remove-object inventorydb 'bag input)
-  (remove-object objectdb id 'room input))
+  (if eq? from 'bag ))
+;(remove-object inventorydb 'bag input)
+; (remove-object objectdb id 'room input))
 
 
 (define (put-item id input)
@@ -257,15 +257,15 @@ You can see a sliver coin and gun")))
             (printf " You can see ~a .\n " output ))))))
 
 ;(define (lookup room-id direction)
- ; (car (assq-ref (assq-ref directions room-id) direction)))
+; (car (assq-ref (assq-ref directions room-id) direction)))
 
 ;(define (lookup id tokens)
- ; (let* ((record (assv-ref decisiontable id))
-  ;       (keylist (get-keywords id))
-   ;      (index (index-of-largest-number (list-of-lengths keylist tokens))))
-    ;(if index 
-     ;   (cadr (list-ref record index))
-      ;  #f)))
+; (let* ((record (assv-ref decisiontable id))
+;       (keylist (get-keywords id))
+;      (index (index-of-largest-number (list-of-lengths keylist tokens))))
+;(if index 
+;   (cadr (list-ref record index))
+;  #f)))
 
 (define (get-response id)
   (car (assq-ref descriptions id)))
@@ -349,7 +349,8 @@ You can see a sliver coin and gun")))
       ( printf " You are in the ~a\n > " (hash-ref rooms rid ))
       ( let (( input ( read )))
          ( cond [( eq? input 'quit ) ( exit )]) ; ; ’ help with paths
-      (cond [(( eq? input 'pick )  (pick-item  'room-id rid input) (loop rid))]) ; ; ’ help with paths
+         ( cond [( eq? input 'pick )  (pick-item  'room-id rid input) (loop rid)]) ; ; ’ help with paths
+      ;  (cond[( eq? input 'pick )  (pick-item  'room-id rid input) (loop rid))] ; ; ’ help with paths
 
          ( if ( member input ( paths rid ))
               ( let (( direction ( lookup rid input )))
@@ -364,7 +365,6 @@ You can see a sliver coin and gun")))
               ( begin
                  ( printf "huh? I didn ’t understand : ~a\n" input )
                  ( loop rid ))))))
-
 
 
 
