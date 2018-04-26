@@ -7,15 +7,29 @@
 ;; The first version of MUD game
 
 ( define objects '((1 "a silver dagger " )
-                   (1 "a gold coin " )))
+                   (1 "a gold coin " )
+                   (2 "a torch")
+                   (2 "a laptop")
+                   (3 "a gun")
+                   (3 "a gold coin")
+                   (4 "a dagger")
+                   (4 "health booster")
+                   (6 "sliver coin")
+                   (6 "gun")))
+                   
 
 
-(define descriptions '( (1 "You are in the lobby you can see an exit to the North and east.")
-                        (2 "You are in the hallway there is an exit to the South and East") 
-                        (3 "You are in the kitchen there is an exit to the east and west")
-                        (4 "You are in the living room there is exit to the Wes and south")
-                        (5 "You are in the bedroom there is exit to the West and north")
-                        (6 "You are in the toilet room there is exit to the West")))
+(define descriptions '( (1 "You are in the lobby you can see an exit to the North and East.
+You can see a silver dagger and a gold coin")
+                        (2 "You are in the hallway there is an exit to the South and East.
+You can see a Torch and Sparrow") 
+                        (3 "You are in the kitchen there is an exit to the East and West.
+You can see a gun a gold coin")
+                        (4 "You are in the living room there is exit to the West and South.
+You can see a health booster and a daggger")                   
+                        (5 "You are in the bedroom there is exit to the West and North")
+                        (6 "You are in the toilet room there is exit to the West.
+You can see a sliver coin and gun")))
 ;(define directions '( (1 (north 2) (south 0) (east 0) (west 0))
 ;                      (2 (north 0) (south 1) (east 3) (west 0))
 ;                      (3 (north 0) (south 0) (east 4) (west 2))
@@ -25,9 +39,9 @@
 
 (define look '(((directions) look) ((look) look) ((examine room) look)))
 (define quit '(((exit game) quit) ((quit game) quit) ((exit) quit) ((quit) quit)))
-(define pick '((( get ) pick ) (( pickup ) pick ) (( pick ) pick )))
-(define put '((( put ) drop ) (( drop ) drop ) (( place ) drop ) (( remove ) drop )))
-(define inventory '((( inventory ) inventory ) (( bag ) inventory )))
+(define pick '(((get) pick) ((pickup) pick) ((pick) pick)))
+(define put '(((put) drop) ((drop) drop) ((place) drop) ((remov ) drop)))
+(define inventory '(((inventory) inventory) ((bag) inventory)))
 
 (define actions `(,@look ,@quit ,@pick ,@put ,@inventory))
 (define decisiontable `((1 ((north) 2) ((east) 6) ,@actions)
@@ -144,12 +158,12 @@
 (display-objects inventorydb  'bag))
 
 
-(define ( display-objects db id )
-(when ( hash-has-key? db id )
-(let* (( record ( hash-ref db id ))
-(output ( string-join record " and " )))
-(when ( not ( equal? output "" ))
-(if ( eq? id  'bag )
+(define (display-objects db id)
+(when (hash-has-key? db id)
+(let* ((record (hash-ref db id))
+(output (string-join record " and ")))
+(when (not (equal? output ""))
+(if (eq? id  'bag )
 (printf " You are carrying ~a .\n" output )
 (printf " You can see ~a .\n " output ))))))
 
@@ -185,13 +199,13 @@
                (get-directions id)
                (loop id #f))
               ((eq? response 'put)
-               (put-item id input )
+               (put-item id input)
                (loop id #f))
               ((eq? response 'pick)
-               ( pick-item id input )
+               (pick-item id input)
                (loop id #f))
               ((eq? response 'inventory)
-               ( display-inventory )
+               (display-inventory )
                (loop id #f))
               
               ((eq? response 'quit)
