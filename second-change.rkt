@@ -311,37 +311,7 @@ You can see a sliver coin and gun")))
            ( move-y room -)]
           [( eq? direction ' east )
            ( move-y room +)]))
-;
-;(define (startgame initial-id)
-; (let loop ((id initial-id) (description #t))
-;  (if description
-;     (printf "~a\n> " (get-response id))
-;    (printf "> "))
-;(let* ((input (read-line))
-;      (string-tokens (string-tokenize input))
-;    (tokens (map string->symbol string-tokens)))
-;(let ((response (lookup id tokens)))
-;(cond ((number? response)
-;      (loop response #t))
-;    ((eq? #f response)
-;    (format #t "huh? I didn't understand that!\n")
-;   (loop id #f))
-; ((eq? response 'look)
-; (get-directions id)
-;(loop id #f))
-;((eq? response 'put)
-; (put-item id input)
-;(loop id #f))
-;((eq? response 'pick)
-;(pick-item id input)
-;(loop id #f))
-;((eq? response 'inventory)
-;(display-inventory )
-;(loop id #f))
-;              
-;((eq? response 'quit)
-; (format #t "So Long, and Thanks for All the Fish...\n")
-;              (exit)))))))
+
 
 
 ( define ( startgame room-id )
@@ -370,20 +340,4 @@ You can see a sliver coin and gun")))
 
 
 
-;(define (startgame room-id)
-;  (let loop ((rid room-id))
-;    (printf "~a\n" (get-room-description rid))
-;    (printf "> ")
-;    (let ((input (read)))
-;      (if (eq? input 'quit) (exit) 'continue)
-;      (if (member input '(north south east west))
-;          (let ((direction (lookup rid input)))
-;            (if (zero? direction)
-;                (loop rid)
-;                (loop direction)))
-;          (begin
-;            (printf "huh? I didn't understand: ~a\n" input)
-;            (loop rid))))))
-
-;(startgame  1)
 (startgame start)
