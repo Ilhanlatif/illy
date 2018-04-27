@@ -5,7 +5,7 @@
 
 
 
-( define objects '((1 "a silver dagger " )
+( define objects '((1 "a silver dagger")
                    (1 "a gold coin " )
                    (2 "a torch")
                    (2 "a laptop")
@@ -110,8 +110,9 @@ You can see a sliver coin and gun")))
 
 
 
-( define room-type '( ( 0 "entrance ")
-                      (1 "hallway ")
+( define room-type '( ( 0 "entrance
+ You can see a Torch and Sparrow")
+                      (1 "hallway")
                       (2 "garden ")
                       (3 "corridor " )
                       (4 "bedroom") 
@@ -310,7 +311,7 @@ You can see a sliver coin and gun")))
            ( move-y room -)]
           [( eq? direction ' east )
            ( move-y room +)]))
-
+;
 ;(define (startgame initial-id)
 ; (let loop ((id initial-id) (description #t))
 ;  (if description
@@ -337,10 +338,10 @@ You can see a sliver coin and gun")))
 ;((eq? response 'inventory)
 ;(display-inventory )
 ;(loop id #f))
-              
+;              
 ;((eq? response 'quit)
 ; (format #t "So Long, and Thanks for All the Fish...\n")
-;               (exit)))))))
+;              (exit)))))))
 
 
 ( define ( startgame room-id )
@@ -349,8 +350,8 @@ You can see a sliver coin and gun")))
       ( printf " You are in the ~a\n > " (hash-ref rooms rid ))
       ( let (( input ( read )))
          ( cond [( eq? input 'quit ) ( exit )]) ; ; ’ help with paths
-         ( cond [( eq? input 'pick )  (pick-item  'room-id rid input) (loop rid)]) ; ; ’ help with paths
-      ;  (cond[( eq? input 'pick )  (pick-item  'room-id rid input) (loop rid))] ; ; ’ help with paths
+         ( cond [( eq? input 'pick )  (pick-item display-objects objectdb  rid ) (loop rid)]) ; ; ’ help with paths
+      
 
          ( if ( member input ( paths rid ))
               ( let (( direction ( lookup rid input )))
@@ -364,11 +365,11 @@ You can see a sliver coin and gun")))
                           ( loop direction ))))
               ( begin
                  ( printf "huh? I didn ’t understand : ~a\n" input )
-                 ( loop rid ))))))
+        ( loop rid ))))))
 
 
 
-;
+
 ;(define (startgame room-id)
 ;  (let loop ((rid room-id))
 ;    (printf "~a\n" (get-room-description rid))
@@ -384,5 +385,5 @@ You can see a sliver coin and gun")))
 ;            (printf "huh? I didn't understand: ~a\n" input)
 ;            (loop rid))))))
 
-;(startgame 1)
+;(startgame  1)
 (startgame start)
